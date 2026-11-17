@@ -18,25 +18,25 @@ Error codes are listed with each feature. Every error is returned as `{"code": "
 
 ---
 
-## 2. `feature/auth` — sign up, log in, log out (BR-01, BR-02)
+## 2. `feature/auth` — sign up, log in, log out (BR-01, BR-02) ✅
 
 **Session:** after login the user's id is stored in the `HttpSession` under `userId`. A small helper `SessionUser.requireUserId(session)` returns it or throws `NotLoggedInException` (401). Every endpoint except signup, login and book search calls it.
 
-- [ ] `UserService.signup(username, password)`
+- [x] `UserService.signup(username, password)`
   - BR-01: username matches `^[A-Za-z0-9_]{3,20}$` → else `INVALID_USERNAME` (400). `null` counts as invalid.
   - BR-01: username unique ignoring case → else `USERNAME_TAKEN` (409)
   - BR-02: password length 8–64 → else `INVALID_PASSWORD` (400). `null` counts as invalid.
   - Checks run in this order: username format, password length, username taken
   - Stores a BCrypt hash, never the plain password; `createdAt` from the `Clock`
-- [ ] `UserService.login(username, password)` → the `User`; username looked up ignoring case; unknown user or wrong password → `WRONG_CREDENTIALS` (401)
-- [ ] `UserService.getUser(id)` → `NotFoundException` if missing
-- [ ] `AuthController`
+- [x] `UserService.login(username, password)` → the `User`; username looked up ignoring case; unknown user or wrong password → `WRONG_CREDENTIALS` (401)
+- [x] `UserService.getUser(id)` → `NotFoundException` if missing
+- [x] `AuthController`
   - `POST /api/auth/signup` `{username, password}` → 201 `{id, username}`
   - `POST /api/auth/login` `{username, password}` → 200 `{id, username}` + session cookie
   - `POST /api/auth/logout` → 204; 401 if not logged in
   - `GET /api/auth/me` → 200 `{id, username, owedKr}`; 401 if not logged in (`owedKr` is 0 until `feature/loans`)
-- [ ] Exceptions: `InvalidUsernameException`, `InvalidPasswordException`, `UsernameTakenException`, `WrongCredentialsException`, `NotLoggedInException`
-- [ ] `GlobalExceptionHandler`: unknown URL → 404 `NOT_FOUND`, wrong path variable type → 400 `BAD_REQUEST` (same JSON shape)
+- [x] Exceptions: `InvalidUsernameException`, `InvalidPasswordException`, `UsernameTakenException`, `WrongCredentialsException`, `NotLoggedInException`
+- [x] `GlobalExceptionHandler`: unknown URL → 404 `NOT_FOUND`, wrong path variable type → 400 `BAD_REQUEST` (same JSON shape)
 
 ---
 
