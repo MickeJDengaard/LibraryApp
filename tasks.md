@@ -112,16 +112,16 @@ Error codes are listed with each feature. Every error is returned as `{"code": "
 
 ---
 
-## 6. `feature/frontend` — static pages
+## 6. `feature/frontend` — static pages ✅
 
 Plain HTML + vanilla JS with `fetch`, served by nginx. All calls go to `/api/...` on the same host.
 
-- [ ] `app.js` — shared helpers: `api(method, path, body)` that returns the JSON or throws the `{code, message}` error; nav bar that shows the user and owed kr from `/api/auth/me`
-- [ ] `style.css` — minimal styling
-- [ ] `index.html` — start page with links
-- [ ] `signup.html` — form → `POST /api/auth/signup`, then go to login
-- [ ] `login.html` — form → `POST /api/auth/login`, then go to search
-- [ ] `search.html` — search box → `GET /api/books`; each result shows available/reserved with a **Borrow** or **Reserve** button
-- [ ] `loans.html` — my loans with due date and fee, **Renew** and **Return** buttons; my reservations with **Cancel**
-- [ ] Log out link → `POST /api/auth/logout`
-- [ ] Error messages from the API are shown on the page (not in alerts)
+- [x] `app.js` — shared helpers: `api(method, path, body)` that returns the JSON or throws the `{code, message}` error; nav bar that shows the user and owed kr from `/api/auth/me`
+- [x] `style.css` — minimal styling
+- [x] `index.html` — start page with links
+- [x] `signup.html` — form → `POST /api/auth/signup`, then go to login
+- [x] `login.html` — form → `POST /api/auth/login`, then go to search
+- [x] `search.html` — search box → `GET /api/books`; each result shows available/reserved with a **Borrow** or **Reserve** button
+- [x] `loans.html` — my loans with due date and fee, **Renew** and **Return** buttons; my reservations with **Cancel**
+- [x] Log out link → `POST /api/auth/logout`
+- [x] Error messages from the API are shown on the page (not in alerts)

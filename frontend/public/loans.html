@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My loans</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav id="nav"></nav>
+  <main>
+    <h1>My loans</h1>
+    <div id="message" class="message" hidden></div>
+
+    <table id="loans">
+      <thead>
+        <tr><th>Title</th><th>Borrowed</th><th>Due</th><th>Renewed</th><th>Returned</th><th>Fee (kr)</th><th></th></tr>
+      </thead>
+      <tbody id="loans-body"></tbody>
+    </table>
+    <p id="no-loans" hidden>You have no loans yet.</p>
+
+    <h2>My reservations</h2>
+    <table id="reservations">
+      <thead>
+        <tr><th>Work ID</th><th>Reserved at</th><th></th></tr>
+      </thead>
+      <tbody id="reservations-body"></tbody>
+    </table>
+    <p id="no-reservations" hidden>You have no active reservations.</p>
+  </main>
+  <script src="app.js"></script>
+  <script>
+    start();
+
+    async function start() {
+      const me = await renderNav();
+      if (!me) {
+        window.location.href = 'login.html';
+        return;
+      }
+      await refresh();
+    }
+
+    async function refresh() {
+      try {
+        const [loans, reservations] = await Promise.all([
+          api('GET', '/loans'),
+          api('GET', '/reservations')
+        ]);
+        showLoans(loans);
+        showReservations(reservations);
+      } catch (e) {
+        showError(e);
+      }
+    }
+
+    function showLoans(loans) {
+      const body = document.getElementById('loans-body');
+      body.innerHTML = '';
+      document.getElementById('no-loans').hidden = loans.length > 0;
+      for (const loan of loans) {
+        const row = el('tr');
+        row.id = 'loan-' + loan.id;
+        row.appendChild(el('td', loan.title));
+        row.appendChild(el('td', loan.borrowedOn));
+        row.appendChild(el('td', loan.dueOn));
+        row.appendChild(el('td', loan.renewCount + ' / 2'));
+        row.appendChild(el('td', loan.returnedOn || '-'));
+        row.appendChild(el('td', loan.feeSoFar));
+        const actions = el('td');
+        actions.className = 'actions';
+        if (loan.active) {
+          actions.appendChild(button('Renew', 'renew-' + loan.id, () => loanAction(loan, 'renew')));
+          actions.appendChild(button('Return', 'return-' + loan.id, () => loanAction(loan, 'return')));
+        }
+        row.appendChild(actions);
+        body.appendChild(row);
+      }
+    }
+
+    function showReservations(reservations) {
+      const body = document.getElementById('reservations-body');
+      body.innerHTML = '';
+      document.getElementById('no-reservations').hidden = reservations.length > 0;
+      for (const reservation of reservations) {
+        const row = el('tr');
+        row.id = 'reservation-' + reservation.id;
+        row.appendChild(el('td', reservation.workId));
+        row.appendChild(el('td', reservation.createdAt.replace('T', ' ').substring(0, 16)));
+        const actions = el('td');
+        actions.className = 'actions';
+        const cancel = button('Cancel', 'cancel-' + reservation.id, () => cancelReservation(reservation));
+        cancel.className = 'secondary';
+        actions.appendChild(cancel);
+        row.appendChild(actions);
+        body.appendChild(row);
+      }
+    }
+
+    async function loanAction(loan, action) {
+      clearMessage();
+      try {
+        const updated = await api('POST', `/loans/${loan.id}/${action}`);
+        if (action === 'renew') {
+          showMessage(`Renewed "${updated.title}". New due date ${updated.dueOn}.`, false);
+        } else {
+          showMessage(`Returned "${updated.title}". Fee: ${updated.feeSoFar} kr.`, false);
+        }
+        await renderNav();
+        await refresh();
+      } catch (e) {
+        showError(e);
+      }
+    }
+
+    async function cancelReservation(reservation) {
+      clearMessage();
+      try {
+        await api('DELETE', `/reservations/${reservation.id}`);
+        showMessage('Reservation cancelled.', false);
+        await refresh();
+      } catch (e) {
+        showError(e);
+      }
+    }
+  </script>
+</body>
+</html>

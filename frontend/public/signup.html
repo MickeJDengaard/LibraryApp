@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign up</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav id="nav"></nav>
+  <main>
+    <h1>Sign up</h1>
+    <div id="message" class="message" hidden></div>
+    <form id="signup-form">
+      <label for="username">Username (3-20 letters, digits or _)</label>
+      <input id="username" name="username" autocomplete="username">
+      <label for="password">Password (8-64 characters)</label>
+      <input id="password" name="password" type="password" autocomplete="new-password">
+      <button id="signup-button" type="submit">Sign up</button>
+    </form>
+  </main>
+  <script src="app.js"></script>
+  <script>
+    renderNav();
+    document.getElementById('signup-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearMessage();
+      try {
+        await api('POST', '/auth/signup', {
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value
+        });
+        window.location.href = 'login.html?signedUp=1';
+      } catch (e) {
+        showError(e);
+      }
+    });
+  </script>
+</body>
+</html>

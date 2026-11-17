@@ -4,9 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Library</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Library</h1>
-  <p>The pages are coming in a later feature branch.</p>
+  <nav id="nav"></nav>
+  <main>
+    <h1>Library</h1>
+    <p>Search books from Open Library, then borrow, renew, return and reserve them.</p>
+    <ul>
+      <li>You can have up to 5 books on loan at a time.</li>
+      <li>A loan lasts 14 days and can be renewed 2 times.</li>
+      <li>Late fee: free for 3 days, then 5 kr per day, at most 200 kr.</li>
+      <li>If you owe 100 kr or more you cannot borrow.</li>
+    </ul>
+    <p><a href="search.html">Start searching</a></p>
+  </main>
+  <script src="app.js"></script>
+  <script>renderNav();</script>
 </body>
 </html>

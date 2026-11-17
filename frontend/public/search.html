@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search books</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav id="nav"></nav>
+  <main>
+    <h1>Search books</h1>
+    <form id="search-form" class="inline">
+      <input id="search-input" placeholder="Title or author (2-100 characters)" size="40">
+      <button id="search-button" type="submit">Search</button>
+    </form>
+    <div id="message" class="message" hidden></div>
+    <table id="results" hidden>
+      <thead>
+        <tr><th>Title</th><th>Author</th><th>Year</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+  </main>
+  <script src="app.js"></script>
+  <script>
+    renderNav();
+    let lastQuery = '';
+
+    document.getElementById('search-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      clearMessage();
+      lastQuery = document.getElementById('search-input').value;
+      search(lastQuery);
+    });
+
+    async function search(query) {
+      try {
+        const books = await api('GET', '/books?q=' + encodeURIComponent(query));
+        showResults(books);
+      } catch (e) {
+        showError(e);
+      }
+    }
+
+    function showResults(books) {
+      const body = document.getElementById('results-body');
+      body.innerHTML = '';
+      document.getElementById('results').hidden = false;
+      if (books.length === 0) {
+        showMessage('No books found.', false);
+      }
+      for (const book of books) {
+        const row = el('tr');
+        row.id = 'book-' + book.workId;
+        row.appendChild(el('td', book.title));
+        row.appendChild(el('td', book.authors.join(', ')));
+        row.appendChild(el('td', book.firstPublishYear));
+
+        const status = el('td');
+        const tag = el('span', book.available ? 'Available' : 'On loan');
+        tag.className = 'tag ' + (book.available ? 'available' : 'on-loan');
+        status.appendChild(tag);
+        if (book.reserved) {
+          const reservedTag = el('span', 'Reserved');
+          reservedTag.className = 'tag reserved';
+          status.appendChild(document.createTextNode(' '));
+          status.appendChild(reservedTag);
+        }
+        row.appendChild(status);
+
+        const actions = el('td');
+        actions.className = 'actions';
+        if (book.available) {
+          actions.appendChild(button('Borrow', 'borrow-' + book.workId, () => borrow(book)));
+        } else {
+          actions.appendChild(button('Reserve', 'reserve-' + book.workId, () => reserve(book)));
+        }
+        row.appendChild(actions);
+        body.appendChild(row);
+      }
+    }
+
+    async function borrow(book) {
+      clearMessage();
+      try {
+        const loan = await api('POST', '/loans', { workId: book.workId });
+        showMessage(`You borrowed "${loan.title}". Due ${loan.dueOn}.`, false);
+        await renderNav();
+        await search(lastQuery);
+      } catch (e) {
+        showError(e);
+      }
+    }
+
+    async function reserve(book) {
+      clearMessage();
+      try {
+        await api('POST', '/reservations', { workId: book.workId });
+        showMessage(`You reserved "${book.title}".`, false);
+        await search(lastQuery);
+      } catch (e) {
+        showError(e);
+      }
+    }
+  </script>
+</body>
+</html>
