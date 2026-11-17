@@ -15,6 +15,7 @@ import dk.kea.library.dto.CredentialsRequest;
 import dk.kea.library.dto.MeResponse;
 import dk.kea.library.dto.UserResponse;
 import dk.kea.library.model.User;
+import dk.kea.library.service.LoanService;
 import dk.kea.library.service.UserService;
 
 @RestController
@@ -22,9 +23,11 @@ import dk.kea.library.service.UserService;
 public class AuthController {
 
     private final UserService userService;
+    private final LoanService loanService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, LoanService loanService) {
         this.userService = userService;
+        this.loanService = loanService;
     }
 
     @PostMapping("/signup")
@@ -55,6 +58,6 @@ public class AuthController {
     public MeResponse me(HttpServletRequest request) {
         long userId = SessionUser.requireUserId(request.getSession(false));
         User user = userService.getUser(userId);
-        return new MeResponse(user.getId(), user.getUsername(), 0); // owedKr comes with feature/loans
+        return new MeResponse(user.getId(), user.getUsername(), loanService.owedKr(userId));
     }
 }

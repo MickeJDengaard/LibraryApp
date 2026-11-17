@@ -62,34 +62,34 @@ Error codes are listed with each feature. Every error is returned as `{"code": "
 
 ---
 
-## 4. `feature/loans` — borrow, renew, return, fees (BR-03 to BR-09)
+## 4. `feature/loans` — borrow, renew, return, fees (BR-03 to BR-09) ✅
 
-- [ ] `FeeCalculator.feeFor(LocalDate due, LocalDate date)` — pure function, BR-08
+- [x] `FeeCalculator.feeFor(LocalDate due, LocalDate date)` — pure function, BR-08
   - `daysLate = date − due` (in days)
   - `daysLate ≤ 3` → 0; otherwise `min(5 × (daysLate − 3), 200)`
-- [ ] `LoanService.owedKr(userId)` — BR-06
+- [x] `LoanService.owedKr(userId)` — BR-06
   - Sum of `feeKr` on returned loans with `feePaid = false`
   - plus `feeFor(dueOn, today)` on every active loan (0 when not late)
-- [ ] `LoanService.borrow(userId, workId)` — checks in this order:
+- [x] `LoanService.borrow(userId, workId)` — checks in this order:
   1. BR-03: user has 5 active loans → `LOAN_LIMIT_REACHED` (409)
   2. BR-06: `owedKr ≥ 100` → `DEBT_TOO_HIGH` (402)
   3. BR-05: book has an active loan → `BOOK_NOT_AVAILABLE` (409)
   4. BR-05: book has an active reservation by another user → `BOOK_RESERVED` (409); by this user → reservation becomes `FULFILLED`
   5. Title from `OpenLibraryClient.findWork` → unknown work: 404 `NOT_FOUND`
   6. BR-04: `borrowedOn = today`, `dueOn = today + 14`
-- [ ] `LoanService.renew(loanId, userId)` — exactly the reference code in `CLAUDE.md`:
+- [x] `LoanService.renew(loanId, userId)` — exactly the reference code in `CLAUDE.md`:
   not found 404 → not yours `NOT_YOUR_LOAN` (403) → returned `ALREADY_RETURNED` (409) → overdue (`today` after `dueOn`) `LOAN_OVERDUE` (409) → `renewCount ≥ 2` `MAX_RENEWALS` (409) → active reservation `BOOK_RESERVED` (409) → `dueOn + 14`, `renewCount + 1`
-- [ ] `LoanService.returnLoan(loanId, userId)` — BR-09
+- [x] `LoanService.returnLoan(loanId, userId)` — BR-09
   - not found 404 → not yours `NOT_YOUR_LOAN` (403) → already returned `ALREADY_RETURNED` (409)
   - `returnedOn = today`, `feeKr = feeFor(dueOn, today)` (the final fee)
-- [ ] `LoanService.myLoans(userId)` → all my loans, newest first; each with `feeSoFar` (`feeFor(dueOn, today)` when active, `feeKr` when returned)
-- [ ] `LoanController`
+- [x] `LoanService.myLoans(userId)` → all my loans, newest first; each with `feeSoFar` (`feeFor(dueOn, today)` when active, `feeKr` when returned)
+- [x] `LoanController`
   - `GET /api/loans` → 200 list of `{id, workId, title, borrowedOn, dueOn, renewCount, returnedOn, feeSoFar, active}`
   - `POST /api/loans` `{workId}` → 201 loan
   - `POST /api/loans/{id}/renew` → 200 loan (new due date)
   - `POST /api/loans/{id}/return` → 200 loan (final fee in `feeSoFar`)
-- [ ] `/api/auth/me` now returns the real `owedKr`
-- [ ] Exceptions: `LoanLimitReachedException`, `DebtTooHighException`, `BookNotAvailableException`, `BookReservedException`, `NotYourLoanException`, `AlreadyReturnedException`, `LoanOverdueException`, `MaxRenewalsException`
+- [x] `/api/auth/me` now returns the real `owedKr`
+- [x] Exceptions: `LoanLimitReachedException`, `DebtTooHighException`, `BookNotAvailableException`, `BookReservedException`, `NotYourLoanException`, `AlreadyReturnedException`, `LoanOverdueException`, `MaxRenewalsException`
 
 ---
 
