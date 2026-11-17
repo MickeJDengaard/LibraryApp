@@ -1,6 +1,7 @@
 package dk.kea.library.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -20,4 +21,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     /** Is the book currently on loan? */
     boolean existsByWorkIdAndReturnedOnIsNull(String workId);
+
+    /** The active loan of a book, if any */
+    Optional<Loan> findByWorkIdAndReturnedOnIsNull(String workId);
 }

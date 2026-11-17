@@ -1,5 +1,6 @@
 package dk.kea.library.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Optional<Reservation> findByWorkIdAndStatus(String workId, ReservationStatus status);
 
     long countByUserIdAndStatus(Long userId, ReservationStatus status);
+
+    List<Reservation> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, ReservationStatus status);
 }

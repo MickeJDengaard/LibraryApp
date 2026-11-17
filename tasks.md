@@ -93,22 +93,22 @@ Error codes are listed with each feature. Every error is returned as `{"code": "
 
 ---
 
-## 5. `feature/reservations` — reserve a book (BR-10)
+## 5. `feature/reservations` — reserve a book (BR-10) ✅
 
-- [ ] `ReservationService.reserve(userId, workId)` — checks in this order:
+- [x] `ReservationService.reserve(userId, workId)` — checks in this order:
   1. BR-10: book has no active loan, or the active loan is this user's → `BOOK_NOT_ON_LOAN` (409)
   2. BR-10: book already has an active reservation → `ALREADY_RESERVED` (409)
   3. BR-10: user already holds 3 active reservations → `RESERVATION_LIMIT_REACHED` (409)
   4. Saves with status `ACTIVE`, `createdAt` from the `Clock`
-- [ ] `ReservationService.cancel(reservationId, userId)`
+- [x] `ReservationService.cancel(reservationId, userId)`
   - not found or not `ACTIVE` → 404 `NOT_FOUND`; not yours → `NOT_YOUR_RESERVATION` (403)
   - Sets status `CANCELLED` (the row is kept)
-- [ ] `ReservationService.myReservations(userId)` → my active reservations
-- [ ] `ReservationController`
+- [x] `ReservationService.myReservations(userId)` → my active reservations
+- [x] `ReservationController`
   - `GET /api/reservations` → 200 my active reservations `{id, workId, createdAt, status}`
   - `POST /api/reservations` `{workId}` → 201 reservation
   - `DELETE /api/reservations/{id}` → 204
-- [ ] Exceptions: `BookNotOnLoanException`, `AlreadyReservedException`, `ReservationLimitReachedException`, `NotYourReservationException`
+- [x] Exceptions: `BookNotOnLoanException`, `AlreadyReservedException`, `ReservationLimitReachedException`, `NotYourReservationException`
 
 ---
 
