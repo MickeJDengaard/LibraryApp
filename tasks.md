@@ -40,25 +40,25 @@ Error codes are listed with each feature. Every error is returned as `{"code": "
 
 ---
 
-## 3. `feature/books` — search Open Library (BR-11)
+## 3. `feature/books` — search Open Library (BR-11) ✅
 
-- [ ] `OpenLibraryClient` interface
+- [x] `OpenLibraryClient` interface
   - `List<OpenLibraryBook> search(String query, int limit)`
   - `Optional<OpenLibraryBook> findWork(String workId)` (empty when Open Library answers 404)
   - `OpenLibraryBook` record: `workId`, `title`, `authors` (list), `firstPublishYear` (nullable)
-- [ ] `HttpOpenLibraryClient` (Spring `RestClient`, base URL from `openlibrary.base-url`)
+- [x] `HttpOpenLibraryClient` (Spring `RestClient`, base URL from `openlibrary.base-url`)
   - search: `GET /search.json?q=...&limit=20`; `key` `/works/OL45883W` → workId `OL45883W`
   - work: `GET /works/{workId}.json` → title
   - Network error or 5xx → `OpenLibraryUnavailableException` (502 `OPEN_LIBRARY_UNAVAILABLE`)
-- [ ] `BookService.search(q)`
+- [x] `BookService.search(q)`
   - BR-11: `q` length 2–100 → else `INVALID_SEARCH` (400). `null` counts as invalid.
   - BR-11: at most 20 results returned, even if the client returns more
   - Each result gets `available` (no active loan) and `reserved` (an active reservation exists)
-- [ ] `BookService.getBook(workId)` → book with `available`, `reserved`; unknown work → 404 `NOT_FOUND`
-- [ ] `BookController`
+- [x] `BookService.getBook(workId)` → book with `available`, `reserved`; unknown work → 404 `NOT_FOUND`
+- [x] `BookController`
   - `GET /api/books?q=...` → 200 list of `{workId, title, authors, firstPublishYear, available, reserved}` (no login needed)
   - `GET /api/books/{workId}` → 200 one book, 404 (login needed)
-- [ ] Exceptions: `InvalidSearchException`, `OpenLibraryUnavailableException`
+- [x] Exceptions: `InvalidSearchException`, `OpenLibraryUnavailableException`
 
 ---
 
