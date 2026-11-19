@@ -49,7 +49,7 @@ public class Loan {
     @Column(nullable = false)
     private boolean feePaid = false;
 
-    protected Loan() {
+    public Loan() {
         // for JPA
     }
 

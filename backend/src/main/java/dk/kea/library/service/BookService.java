@@ -21,15 +21,20 @@ public class BookService {
     public static final int QUERY_MAX_LENGTH = 100;
     public static final int MAX_RESULTS = 20;
 
-    private final OpenLibraryClient openLibrary;
-    private final LoanRepository loans;
-    private final ReservationRepository reservations;
+    private OpenLibraryClient openLibrary;
+    private LoanRepository loans;
+    private ReservationRepository reservations;
 
     public BookService(OpenLibraryClient openLibrary, LoanRepository loans, ReservationRepository reservations) {
         this.openLibrary = openLibrary;
         this.loans = loans;
         this.reservations = reservations;
     }
+
+    public BookService() {
+
+    }
+
 
     public List<BookResponse> search(String query) {
         if (!isValidQuery(query)) {

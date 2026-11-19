@@ -35,12 +35,12 @@ public class LoanService {
     public static final int MAX_RENEWALS = 2;
     public static final int DEBT_LIMIT_KR = 100;
 
-    private final LoanRepository loans;
-    private final ReservationRepository reservations;
-    private final UserRepository users;
-    private final OpenLibraryClient openLibrary;
-    private final FeeCalculator feeCalculator;
-    private final Clock clock;
+    private LoanRepository loans;
+    private ReservationRepository reservations;
+    private UserRepository users;
+    private OpenLibraryClient openLibrary;
+    private FeeCalculator feeCalculator;
+    private Clock clock;
 
     public LoanService(LoanRepository loans, ReservationRepository reservations, UserRepository users,
                        OpenLibraryClient openLibrary, FeeCalculator feeCalculator, Clock clock) {
@@ -51,6 +51,11 @@ public class LoanService {
         this.feeCalculator = feeCalculator;
         this.clock = clock;
     }
+
+    public LoanService() {
+
+    }
+
 
     @Transactional
     public Loan borrow(long userId, String workId) {

@@ -24,15 +24,20 @@ public class UserService {
 
     private static final String USERNAME_PATTERN = "^[A-Za-z0-9_]+$";
 
-    private final UserRepository users;
-    private final PasswordEncoder passwordEncoder;
-    private final Clock clock;
+    private UserRepository users;
+    private PasswordEncoder passwordEncoder;
+    private Clock clock;
 
     public UserService(UserRepository users, PasswordEncoder passwordEncoder, Clock clock) {
         this.users = users;
         this.passwordEncoder = passwordEncoder;
         this.clock = clock;
     }
+
+    public UserService() {
+
+    }
+
 
     public User signup(String username, String password) {
         if (!isValidUsername(username)) {
