@@ -52,8 +52,10 @@ public class LoanService {
         this.clock = clock;
     }
 
-    public LoanService() {
-
+    public LoanService(LoanRepository loans, FeeCalculator feeCalculator, Clock clock) {
+        this.loans = loans;
+        this.feeCalculator = feeCalculator;
+        this.clock = clock;
     }
 
 

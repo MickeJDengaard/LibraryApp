@@ -2,11 +2,14 @@ package unitTests;
 
 import dk.kea.library.model.Loan;
 import dk.kea.library.repository.LoanRepository;
+import dk.kea.library.service.FeeCalculator;
 import dk.kea.library.service.LoanService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -23,22 +26,20 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-@ExtendWith(MockitoExtension.class)
+
 class LoanServiceTest {
 
-    private ArrayList<Loan> loanList;
     private MockedStatic<LocalDate> mockedStatic;
-    @Mock
     private Loan loan = new Loan();
+    private Loan loan2 = new Loan();
     @Mock
     private LoanRepository loanRepository;
 
+    private FeeCalculator feeCalculator;
+
     @BeforeEach
     void setUp() {
-        loanList = new ArrayList<>();
-        loanList.add(new Loan());
-        loanList.add(new Loan());
+
     }
 
     @AfterEach
@@ -49,29 +50,56 @@ class LoanServiceTest {
     }
 
 
-    @Test
-    void owedKr() {
+    @ParameterizedTest
+    @CsvSource({
+            "2025-11-13, 2025-11-11, 50",
+            "2025-11-13, 2025-11-13, 40",
+            "2025-11-18, 2025-11-20, 30",
+            "2025-11-18, 2025-11-13, 35",
+            "2026-02-02, 2024-11-13, 230"
+
+    })
+    void owedKr(LocalDate dueDate1, LocalDate dueDate2, int expected) {
         //Arrange
-        LoanService loanService = new LoanService();
+        List<Loan> returnedLoans = new ArrayList<>();
+        List<Loan> unreturnedLoans = new ArrayList<>();
 
-        loan = mock(Loan.class);
-            when(loan.getFeeKr()).thenReturn(5);
-            when(loan.getDueOn()).thenReturn(LocalDate.parse("2025-11-13"));
+        feeCalculator = new FeeCalculator();
 
+        //Create loans
+        loan.setDueOn(dueDate1);
+        loan.setFeeKr(20);
 
+        loan2.setDueOn(dueDate2);
+        loan2.setFeeKr(10);
+
+        //Add loans to lists
+        returnedLoans.add(loan);
+        returnedLoans.add(loan2);
+
+        unreturnedLoans.add(loan);
+        unreturnedLoans.add(loan2);
+
+        //Mock loanRepository
         loanRepository = mock(LoanRepository.class);
-            when(loanRepository.findByUserIdAndReturnedOnIsNotNullAndFeePaidFalse(1L)).thenReturn(loanList);
+            when(loanRepository.findByUserIdAndReturnedOnIsNotNullAndFeePaidFalse(1L)).thenReturn(returnedLoans);
+            when(loanRepository.findByUserIdAndReturnedOnIsNull(1L)).thenReturn(unreturnedLoans);
 
+
+        //Mock LocalDate.now() to 2025-11-17
         Clock clock = Clock.fixed(Instant.parse("2025-11-17T10:15:30.00Z"), ZoneId.of("UTC"));
         LocalDate date = LocalDate.now(clock);
-        mockedStatic = mockStatic(LocalDate.class);
+        mockedStatic = mockStatic(LocalDate.class, CALLS_REAL_METHODS);
         when(LocalDate.now()).thenReturn(date);
+
+        //Create loanService
+        LoanService loanService = new LoanService(loanRepository, feeCalculator, clock);
 
         //Act
         int result = loanService.owedKr(1L);
 
         //Assert
-        assertEquals(10, result);
+        assertEquals(expected, result);
 
     }
 }
