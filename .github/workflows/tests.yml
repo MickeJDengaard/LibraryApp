@@ -40,6 +40,7 @@ jobs:
 
       - name: Run integration tests
         run: mvn -B verify
+        working-directory: ./backend
 
   api-tests:
     name: API tests
