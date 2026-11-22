@@ -39,11 +39,11 @@ public class LoanService {
     private ReservationRepository reservations;
     private UserRepository users;
     private OpenLibraryClient openLibrary;
-    private FeeCalculator feeCalculator;
+    private dk.kea.library.service.FeeCalculator feeCalculator;
     private Clock clock;
 
     public LoanService(LoanRepository loans, ReservationRepository reservations, UserRepository users,
-                       OpenLibraryClient openLibrary, FeeCalculator feeCalculator, Clock clock) {
+                       OpenLibraryClient openLibrary, dk.kea.library.service.FeeCalculator feeCalculator, Clock clock) {
         this.loans = loans;
         this.reservations = reservations;
         this.users = users;
