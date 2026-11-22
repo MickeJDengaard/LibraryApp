@@ -20,6 +20,7 @@
     <properties>
         <java.version>21</java.version>
         <mockito.version>5.14.2</mockito.version>
+        <testcontainers.version>1.20.6</testcontainers.version>
         <sonar.organization>mickejdengaard</sonar.organization>
         <sonar.projectKey>MickeJDengaard_LibraryApp</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -74,6 +75,31 @@
             <scope>test</scope>
         </dependency>
         <!-- Jacoco Maven Plugin -->
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
 <dependency>
   <groupId>org.jacoco</groupId>
   <artifactId>jacoco-maven-plugin</artifactId>

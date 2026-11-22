@@ -6,7 +6,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import dk.kea.library.model.Loan;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+@Repository
 public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     /** Active (not returned) loans of a user */

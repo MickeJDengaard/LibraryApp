@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import dk.kea.library.model.Reservation;
 import dk.kea.library.model.ReservationStatus;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     boolean existsByWorkIdAndStatus(String workId, ReservationStatus status);
