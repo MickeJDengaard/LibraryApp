@@ -13,10 +13,12 @@ class Postgresconfig {
     @ServiceConnection
     PostgreSQLContainer postgres() {
         return (PostgreSQLContainer) new PostgreSQLContainer("postgres:16")
-            .withDatabaseName("library")
-            .withCopyFileToContainer(
-                MountableFile.forHostPath("db/library.sql"),
-                "/docker-entrypoint-initdb.d/01-library.sql"
-            );
+                .withDatabaseName("library")
+                .withCopyFileToContainer(
+                        MountableFile.forHostPath("../db/schema.sql"),
+                        "/docker-entrypoint-initdb.d/01-schema.sql")
+                .withCopyFileToContainer(
+                        MountableFile.forHostPath("../db/seed.sql"),
+                        "/docker-entrypoint-initdb.d/02-seed.sql");
     }
 }

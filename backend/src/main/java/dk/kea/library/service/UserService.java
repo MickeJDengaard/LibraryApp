@@ -3,6 +3,7 @@ package dk.kea.library.service;
 import java.time.Clock;
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     private Clock clock;
 
+    @Autowired
     public UserService(UserRepository users, PasswordEncoder passwordEncoder, Clock clock) {
         this.users = users;
         this.passwordEncoder = passwordEncoder;

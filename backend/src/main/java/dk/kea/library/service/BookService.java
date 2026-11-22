@@ -3,6 +3,7 @@ package dk.kea.library.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dk.kea.library.client.OpenLibraryBook;
@@ -17,7 +18,7 @@ import dk.kea.library.repository.ReservationRepository;
 @Service
 public class BookService {
 
-    public static final int QUERY_MIN_LENGTH = 2;
+    public static final int QUERY_MIN_LENGTH = 3;
     public static final int QUERY_MAX_LENGTH = 100;
     public static final int MAX_RESULTS = 20;
 
@@ -25,6 +26,7 @@ public class BookService {
     private LoanRepository loans;
     private ReservationRepository reservations;
 
+    @Autowired
     public BookService(OpenLibraryClient openLibrary, LoanRepository loans, ReservationRepository reservations) {
         this.openLibrary = openLibrary;
         this.loans = loans;

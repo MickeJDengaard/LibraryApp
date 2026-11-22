@@ -23,8 +23,8 @@ class BookServiceTest {
     //Positive
     @ParameterizedTest
     @CsvSource({
-            "va",
             "val",
+            "vali",
             "valid-query123456",
             "Valid_query_due_to_length_this_query_is_99_characters_long_currently_which_means_it_looks_stupid123",
             "Valid_query_due_to_length_this_query_is_100_characters_long_currently_which_means_it_looks_stupid123"
@@ -44,6 +44,7 @@ class BookServiceTest {
     @CsvSource(value = {
             "''", //Empty string
             "i",
+            "in",
             "Invalid_query_due_to_length_this_query_is_101_characters_long_currently_which_means_it_looks_stupid12",
             "Invalid_query_due_to_length_this_query_is_102_characters_long_currently_which_means_it_looks_stupid123",
             "null"

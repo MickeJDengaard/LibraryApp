@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ public class LoanService {
     private dk.kea.library.service.FeeCalculator feeCalculator;
     private Clock clock;
 
+    @Autowired
     public LoanService(LoanRepository loans, ReservationRepository reservations, UserRepository users,
                        OpenLibraryClient openLibrary, dk.kea.library.service.FeeCalculator feeCalculator, Clock clock) {
         this.loans = loans;
