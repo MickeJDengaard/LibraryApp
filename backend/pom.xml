@@ -20,6 +20,9 @@
     <properties>
         <java.version>21</java.version>
         <mockito.version>5.14.2</mockito.version>
+        <sonar.organization>mickejdengaard</sonar.organization>
+        <sonar.projectKey>MickeJDengaard_LibraryApp</sonar.projectKey>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
