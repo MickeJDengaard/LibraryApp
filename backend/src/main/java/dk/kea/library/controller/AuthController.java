@@ -50,6 +50,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
 
         userService.deleteUser(userId);

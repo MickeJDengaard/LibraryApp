@@ -1,0 +1,326 @@
+openapi: "3.1.0"
+info:
+  title: "LibraryApp API"
+  description: "LibraryApp API"
+  version: "1.0.0"
+servers:
+  - url: "https://LibraryApp"
+paths:
+  /api/auth/login:
+    post:
+      summary: "POST api/auth/login"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CredentialsRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+  /api/auth/logout:
+    post:
+      summary: "POST api/auth/logout"
+      operationId: "logout"
+      responses:
+        "204":
+          description: "No Content"
+  /api/auth/me:
+    get:
+      summary: "GET api/auth/me"
+      operationId: "me"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MeResponse"
+  /api/auth/signup:
+    post:
+      summary: "POST api/auth/signup"
+      operationId: "signup"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CredentialsRequest"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+  /api/loans:
+    get:
+      summary: "GET api/loans"
+      operationId: "myLoans"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/LoanResponse"
+    post:
+      summary: "POST api/loans"
+      operationId: "borrow"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkIdRequest"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoanResponse"
+  /api/loans/{id}/renew:
+    post:
+      summary: "POST api/loans/{id}/renew"
+      operationId: "renew"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoanResponse"
+  /api/loans/{id}/return:
+    post:
+      summary: "POST api/loans/{id}/return"
+      operationId: "returnLoan"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoanResponse"
+  /api/reservations:
+    get:
+      summary: "GET api/reservations"
+      operationId: "myReservations"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ReservationResponse"
+    post:
+      summary: "POST api/reservations"
+      operationId: "reserve"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkIdRequest"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReservationResponse"
+  /api/reservations/{id}:
+    delete:
+      summary: "DELETE api/reservations/{id}"
+      operationId: "cancel"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "204":
+          description: "No Content"
+  /api/books:
+    get:
+      summary: "GET api/books"
+      operationId: "search"
+      parameters:
+        - name: "q"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/BookResponse"
+  /api/books/{workId}:
+    get:
+      summary: "GET api/books/{workId}"
+      operationId: "getBook"
+      parameters:
+        - name: "workId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BookResponse"
+components:
+  schemas:
+    CredentialsRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+          nullable: true
+        password:
+          type: "string"
+          nullable: true
+    UserResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        username:
+          type: "string"
+          nullable: true
+    MeResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        username:
+          type: "string"
+          nullable: true
+        owedKr:
+          type: "integer"
+          format: "int32"
+          nullable: true
+    LoanResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        workId:
+          type: "string"
+          nullable: true
+        title:
+          type: "string"
+          nullable: true
+        borrowedOn:
+          type: "string"
+          format: "date"
+          nullable: true
+        dueOn:
+          type: "string"
+          format: "date"
+          nullable: true
+        renewCount:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        returnedOn:
+          type: "string"
+          format: "date"
+          nullable: true
+        feeSoFar:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        active:
+          type: "boolean"
+          nullable: true
+    WorkIdRequest:
+      type: "object"
+      properties:
+        workId:
+          type: "string"
+          nullable: true
+    ReservationResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          nullable: true
+        workId:
+          type: "string"
+          nullable: true
+        createdAt:
+          type: "string"
+          format: "date-time"
+          nullable: true
+        status:
+          type: "string"
+          nullable: true
+          enum:
+            - "ACTIVE"
+            - "FULFILLED"
+            - "CANCELLED"
+    BookResponse:
+      type: "object"
+      properties:
+        workId:
+          type: "string"
+          nullable: true
+        title:
+          type: "string"
+          nullable: true
+        authors:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+        firstPublishYear:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        available:
+          type: "boolean"
+          nullable: true
+        reserved:
+          type: "boolean"
+          nullable: true
