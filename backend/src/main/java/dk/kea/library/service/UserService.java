@@ -72,6 +72,15 @@ public class UserService {
         return users.findById(id).orElseThrow(NotFoundException::new);
     }
 
+    public void deleteUser(Long userId) {
+
+        if (!users.existsById(userId)) {
+            throw new RuntimeException("User not found with ID: " + userId);
+        }
+
+        users.deleteById(userId);
+    }
+
     /** BR-01: 3-20 characters, only letters, digits and _ */
     public boolean isValidUsername(String username) {
         if (username == null) {
@@ -92,4 +101,6 @@ public class UserService {
         int length = password.length();
         return length >= PASSWORD_MIN_LENGTH && length <= PASSWORD_MAX_LENGTH;
     }
+
+
 }

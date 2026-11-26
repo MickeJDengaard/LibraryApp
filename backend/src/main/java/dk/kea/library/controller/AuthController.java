@@ -4,13 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import dk.kea.library.dto.CredentialsRequest;
 import dk.kea.library.dto.MeResponse;
 import dk.kea.library.dto.UserResponse;
@@ -52,6 +47,14 @@ public class AuthController {
         HttpSession session = request.getSession(false);
         SessionUser.requireUserId(session);
         session.invalidate();
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+
+        userService.deleteUser(userId);
+
+        return ResponseEntity.ok("User deleted successfully");
     }
 
     @GetMapping("/me")
