@@ -51,6 +51,14 @@ mvn package -DskipTests   # build
 mvn verify                # run tests with JaCoCo coverage
 ```
 
+## ON CASCADE ACTIVATION
+Use the following commands to properly setup and activate on cascade onto the database build for loans and reservations.
+
+docker compose up -d db
+Get-Content -Raw db/schema.sql | docker compose exec -T db psql -U library -d library
+Get-Content -Raw db/seed.sql | docker compose exec -T db psql -U library -d library
+docker compose up -d --build
+
 ## API
 
 | Method | Path | Description |
