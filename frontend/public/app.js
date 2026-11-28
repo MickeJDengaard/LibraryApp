@@ -88,6 +88,15 @@ async function renderNav() {
       await api('POST', '/auth/logout').catch(() => {});
       window.location.href = 'login.html';
     }));
+    nav.appendChild(button('Delete account', 'delete-account-button', async () => {
+      if (!confirm('Delete your account and all your loans and reservations? This cannot be undone.')) return;
+      try {
+        await api('DELETE', '/auth/' + me.id);
+        window.location.href = 'signup.html';
+      } catch (e) {
+        showError(e);
+      }
+    }));
   }
   return me;
 }
